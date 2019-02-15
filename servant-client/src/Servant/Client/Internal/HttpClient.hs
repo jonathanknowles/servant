@@ -165,11 +165,7 @@ performRequest req = do
       for_ cookieJar' $ \cj -> liftIO $ do
         now' <- getCurrentTime
         atomically $ modifyTVar' cj (fst . Client.updateCookieJar response request now')
-      let status = Client.responseStatus response
-          status_code = statusCode status
-          ourResponse = clientResponseToResponse response
-      unless (status_code >= 200 && status_code < 300) $
-        throwError $ FailureResponse ourResponse
+      let ourResponse = clientResponseToResponse response
       return ourResponse
 
 clientResponseToResponse :: Client.Response a -> GenResponse a
